@@ -48,6 +48,7 @@ passport_1.default.use(new LocalStrategy({ usernameField: "email" }, function (e
                     position: true,
                     user_account: {
                         select: {
+                            id: true,
                             password: true
                         }
                     }
@@ -55,11 +56,11 @@ passport_1.default.use(new LocalStrategy({ usernameField: "email" }, function (e
             });
             //check if account exist
             if (!employee || !(employee === null || employee === void 0 ? void 0 : employee.user_account))
-                return done(null, false, { message: 'Account not found.' });
+                return done(null, false, { message: 'Employee not found.' });
             //check password
             try {
                 if (yield bcryptjs_1.default.compare(password, employee.user_account.password)) {
-                    return done(null, { userId: employee.id, username: `${employee.first_name} ${employee.last_name}`, position: employee.position });
+                    return done(null, { userId: employee.user_account.id, username: `${employee.first_name} ${employee.last_name}`, position: employee.position });
                 }
                 else
                     return done(null, false, { message: 'Password incorrect' });
@@ -248,17 +249,22 @@ authRoute.get('/user', checkCredentials, (req, res) => __awaiter(void 0, void 0,
     if (!profile)
         return res.status(404).json({ error: "Invalid user" });
     try {
-        const profileImage = yield dataPool.employee.findUnique({
+        const profileImage = yield dataPool.account.findUnique({
             where: {
                 id: profile.userId
             },
             select: {
-                profile_image: true
+                employee: {
+                    select: {
+                        id: true,
+                        profile_image: true
+                    }
+                }
             }
         });
         if (!profileImage)
             return res.status(404).json({ error: "Invalid user" });
-        return res.status(200).json({ account: { id: profile.userId, username: profile.username, position: profile.position, image: profileImage.profile_image } });
+        return res.status(200).json({ account: { id: profile.userId, username: profile.username, position: profile.position, image: profileImage.employee.profile_image, employeeId: profileImage.employee.id } });
     }
     catch (err) {
         return res.status(400).json({ error: err.message });

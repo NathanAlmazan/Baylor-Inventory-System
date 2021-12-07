@@ -14,7 +14,7 @@ import CreateBackup from './backup/backupData';
 import statisticsRoute from './statistics/statisticsRoute';
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://192.168.0.106:3000', 'http://localhost:3000', 'http://baylor-frontend:3000'],
 }
 
 //initialized express

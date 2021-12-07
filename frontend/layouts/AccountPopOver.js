@@ -28,7 +28,7 @@ export default function AccountPopover({ user }) {
     {
       label: 'Profile',
       icon: PersonIcon,
-      linkTo: `/employees/profile/${user.id}`
+      linkTo: `/employees/profile/${user.employeeId}`
     }
   ];
 

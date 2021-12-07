@@ -37,6 +37,8 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const hbs = __importStar(require("handlebars"));
 const puppeteer_1 = __importDefault(require("puppeteer"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const dataPool = new client_1.PrismaClient();
 class SalesOrder {
     constructor() {
@@ -867,7 +869,7 @@ function generateInvoicePDF(orderId) {
                 return { status: false, message: "Order does not exist." };
             if (orderInvoice.sold != null)
                 return { status: false, message: "Order is already paid." };
-            const browser = yield puppeteer_1.default.launch();
+            const browser = yield puppeteer_1.default.connect({ browserWSEndpoint: process.env.BROWSER_URL });
             const page = yield browser.newPage();
             const content = yield compile('Invoice', orderId);
             const fileName = orderId + "_" + new Date().toISOString().split('.')[0];
@@ -914,7 +916,7 @@ function generateReceiptPDF(orderId) {
                 return { status: false, message: "Order does not exist." };
             if (orderReceipt.transactions.length == 0)
                 return { status: false, message: "This order has no payments yet." };
-            const browser = yield puppeteer_1.default.launch();
+            const browser = yield puppeteer_1.default.connect({ browserWSEndpoint: process.env.BROWSER_URL });
             const page = yield browser.newPage();
             const content = yield compileReceipt('receipt', orderId);
             const fileName = orderId + "_" + new Date().toISOString().split('.')[0];

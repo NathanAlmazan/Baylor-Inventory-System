@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }) {
         const dataResponse = response.data.data;
 
         setNotifications(state => dataResponse.notifications);
-        setUser(state => ({ ...state, id: currUser.userId, name: currUser.user.name, position: currUser.position, image: profile.image !== null ? profile.image : baseURL + "/users/images/defaultProfile.jpg" }))
+        setUser(state => ({ ...state, id: currUser.userId, name: currUser.user.name, position: currUser.position, image: profile.image !== null ? baseURL + "/users/images/" + profile.image : baseURL + "/users/images/defaultProfile.jpg", employeeId: profile.employeeId }))
       } catch (err) {
         history.push("/signin");
       }

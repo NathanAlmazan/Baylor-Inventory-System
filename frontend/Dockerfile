@@ -15,7 +15,8 @@ ENV NODE_ENV production
 ENV API_BASE_URL="https://baylor-company.herokuapp.com"
 ENV SECRET_KEY="wyIJ2wMLRTNw9CPSTjblem39iFa2fxScnw3L4Zzy"
 ENV BACKEND_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjAsInVzZXJuYW1lIjoiRnJvbnQgU2VydmVyIiwicG9zaXRpb24iOiJTZXJ2ZXIiLCJpYXQiOjE2MzU3NDQyMzl9.R4Y5_DPgMIZ8tNVUuQ4ZZnLWa6XPne_S1RQpTUgorUE"
-ENV NEXTAUTH_URL="http://localhost:3000"
+ENV NEXTAUTH_URL="http://192.168.0.106:3000"
+ENV NEXTAUTH_URL_INTERNAL="http://baylor-frontend:3000"
 ENV SECRET="INp8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGogFGo8IvdIyeMco"
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
@@ -32,11 +33,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-ENV API_BASE_URL="http://172.19.0.3:4000"
+ENV API_BASE_URL="http://baylor-api:4000"
 ENV SECRET_KEY="wyIJ2wMLRTNw9CPSTjblem39iFa2fxScnw3L4Zzy"
 ENV BACKEND_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjAsInVzZXJuYW1lIjoiRnJvbnQgU2VydmVyIiwicG9zaXRpb24iOiJTZXJ2ZXIiLCJpYXQiOjE2MzU3NDQyMzl9.R4Y5_DPgMIZ8tNVUuQ4ZZnLWa6XPne_S1RQpTUgorUE"
-ENV NEXTAUTH_URL="http://localhost:3000"
+ENV NEXTAUTH_URL="http://192.168.0.106:3000"
 ENV SECRET="INp8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGogFGo8IvdIyeMco"
+ENV NEXTAUTH_URL_INTERNAL="http://baylor-frontend:3000"
 
 USER nextjs
 

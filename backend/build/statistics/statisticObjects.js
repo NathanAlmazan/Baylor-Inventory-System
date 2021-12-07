@@ -309,88 +309,85 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     }
                 }
                 try {
-                    const currDate1 = new Date();
+                    const currentDate = new Date();
                     const dueOrders = yield dataPool.order.count({
                         where: {
                             AND: {
                                 sold: null,
                                 is_active: true,
                                 due_date: {
-                                    gte: currDate1.toISOString(),
-                                    lt: new Date(currDate1.setDate(currDate1.getDate() + 1)).toISOString()
+                                    gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString(),
+                                    lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), (currentDate.getDate() + 1)).toISOString()
                                 }
                             }
                         }
                     });
                     if (dueOrders != 0) {
                         notifications.push({
-                            title: "Orders due today",
-                            description: `term of ${dueOrders} sales order due today`,
+                            title: "Due today",
+                            description: dueOrders > 1 ? `${dueOrders} custoemr credits due today` : `${dueOrders} custoemr credit due today`,
                             createdAt: new Date(),
                             isUnRead: true,
                             link: '/orders'
                         });
                     }
-                    const currDate2 = new Date();
                     const duePurchase = yield dataPool.purchase.count({
                         where: {
                             AND: {
                                 is_active: true,
                                 is_paid: false,
                                 due_date: {
-                                    gte: currDate2.toISOString(),
-                                    lt: new Date(currDate2.setDate(currDate2.getDate() + 1)).toISOString()
+                                    gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString(),
+                                    lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), (currentDate.getDate() + 1)).toISOString()
                                 }
                             }
                         }
                     });
                     if (duePurchase != 0) {
                         notifications.push({
-                            title: "Payables due today",
-                            description: `term of ${duePurchase} orders we purchased due today`,
+                            title: "Due today",
+                            description: duePurchase > 1 ? `${duePurchase} payables due today` : `${duePurchase} payable due today`,
                             createdAt: new Date(),
                             isUnRead: true,
                             link: '/purchase'
                         });
                     }
-                    const currDate3 = new Date();
                     const overdueOrders = yield dataPool.order.count({
                         where: {
                             AND: {
                                 sold: null,
                                 is_active: true,
                                 due_date: {
-                                    lt: new Date(currDate3.setDate(currDate3.getDate() - 1)).toISOString()
+                                    lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString()
                                 }
                             }
                         }
                     });
                     if (overdueOrders != 0) {
                         notifications.push({
-                            title: "Overdue orders",
-                            description: `term of ${overdueOrders} sales order ended but still unpaid`,
-                            createdAt: currDate3,
+                            title: "Overdue",
+                            description: overdueOrders > 1 ? `${overdueOrders} customer credits lapsed on due date` : `${overdueOrders} customer credit lapsed on due date`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/orders/overdue'
                         });
                     }
-                    const currDate4 = new Date();
                     const overduePurchase = yield dataPool.purchase.count({
                         where: {
                             AND: {
                                 is_paid: false,
                                 is_active: true,
                                 due_date: {
-                                    lt: new Date(currDate4.setDate(currDate4.getDate() - 1)).toISOString()
+                                    lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString(),
                                 }
                             }
                         }
                     });
                     if (overduePurchase != 0) {
                         notifications.push({
-                            title: "Overdue credits",
-                            description: `${overduePurchase} payables lapsed on due date`,
-                            createdAt: currDate4,
+                            title: "Overdue",
+                            description: overduePurchase > 1 ? `${overduePurchase} payables lapsed on due date` : `${overduePurchase} payable lapsed on due date`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/purchase/overdue'
                         });
@@ -431,8 +428,8 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     if (orderDelivery != 0 && Personnel.includes(context.position)) {
                         notifications.push({
                             title: "Shipping queue",
-                            description: `${orderDelivery} orders waiting to be delivered`,
-                            createdAt: currDate4,
+                            description: orderDelivery > 1 ? `${orderDelivery} orders waiting to be delivered` : `${orderDelivery} order waiting to be delivered`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/orders/delivery'
                         });
@@ -448,20 +445,19 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     if (purchaseDelivery != 0 && Personnel.includes(context.position)) {
                         notifications.push({
                             title: "Arriving Stocks",
-                            description: `${purchaseDelivery} orders waiting to arrive`,
-                            createdAt: currDate4,
+                            description: purchaseDelivery > 1 ? `${purchaseDelivery} orders waiting to arrive` : `${purchaseDelivery} order waiting to arrive`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/purchase/shipment'
                         });
                     }
-                    const currDate5 = new Date();
                     const newOrders = yield dataPool.order.count({
                         where: {
                             AND: {
                                 is_active: true,
                                 order_date: {
-                                    gte: currDate5.toISOString(),
-                                    lt: new Date(currDate5.setDate(currDate5.getDate() + 1)).toISOString()
+                                    gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString(),
+                                    lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), (currentDate.getDate() + 1)).toISOString()
                                 }
                             }
                         }
@@ -469,18 +465,17 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     if (newOrders != 0 && CustomPosition.includes(context.position)) {
                         notifications.push({
                             title: "New Orders",
-                            description: `${newOrders} orders are placed today`,
-                            createdAt: currDate4,
+                            description: newOrders > 1 ? `${newOrders} orders placed today` : `${newOrders} order placed today`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/orders'
                         });
                     }
-                    const currDate6 = new Date();
                     const receivables = yield dataPool.transaction.aggregate({
                         where: {
                             payment_date: {
-                                gte: currDate6.toISOString(),
-                                lt: new Date(currDate6.setDate(currDate6.getDate() + 1)).toISOString()
+                                gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString(),
+                                lt: new Date(currentDate.getFullYear(), currentDate.getMonth(), (currentDate.getDate() + 1)).toISOString()
                             }
                         },
                         _sum: {
@@ -491,8 +486,8 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     if (totalReceivables != 0 && ExecutivePosition.includes(context.position)) {
                         notifications.push({
                             title: "Total receivables",
-                            description: `₱ ${totalReceivables} of payment received today`,
-                            createdAt: currDate4,
+                            description: `${totalReceivables} pesos`,
+                            createdAt: new Date(),
                             isUnRead: true,
                             link: '/transactions'
                         });

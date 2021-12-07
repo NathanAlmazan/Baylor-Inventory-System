@@ -35,6 +35,7 @@ export default function CreateOrder(props) {
     const [selectedAgent, setSelectedAgent] = useState(null);
     const [errorDialog, setErrorDialog] = useState(null);
     const [successDialog, setSuccessDialog] = useState(false);
+    const [generatedInvoice, setGenerated] = useState(false);
     const [orderId, setOrderId] = useState(null);
     const forceUpdate = useForceUpdate();
     const history = useRouter();
@@ -176,6 +177,24 @@ export default function CreateOrder(props) {
       setOrderProducts(newSelected);
     }
 
+    const handleLeavePage = (path) => {
+      if (!generatedInvoice) {
+        const baseURL = API_CLIENT_SIDE();
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'JWT ' + currUser.access_token,
+            }
+        };
+
+        axios.get(`${baseURL}/sales/generate-invoice/${orderId}`, config);
+        history.push(path);
+
+      } else {
+        history.push(path);
+      }
+    }
+
     const handleGenerateInvoice = async () => {
       const baseURL = API_CLIENT_SIDE();
       const config = {
@@ -190,6 +209,7 @@ export default function CreateOrder(props) {
           const orderInvoice = response.data.data;
 
           window.open(`${baseURL}/sales/invoices/${orderInvoice}.pdf`);
+          setGenerated(true);
 
       } catch (err) {
           if (err.response) {
@@ -306,7 +326,7 @@ export default function CreateOrder(props) {
               <SuccessDialog 
                 open={successDialog}
                 orderId={orderId}
-                redirect={path => history.push(path)}
+                redirect={path => handleLeavePage(path)}
                 generateInvoice={() => handleGenerateInvoice()}
                 update={false}
               />

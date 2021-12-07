@@ -35,6 +35,7 @@ passport.use(new LocalStrategy({ usernameField: "email" },
                     position: true,
                     user_account: {
                         select: {
+                            id: true,
                             password: true
                         }
                     }
@@ -44,21 +45,10 @@ passport.use(new LocalStrategy({ usernameField: "email" },
             //check if account exist
             if (!employee || !employee?.user_account) return done(null, false, { message: 'Employee not found.' });
 
-            const account = await dataPool.account.findUnique({
-                where: {
-                    employee_id: employee.id
-                },
-                select: {
-                    id: true
-                }
-            })
-
-            if (!account) return done(null, false, { message: 'Account not found.' });
-
             //check password
             try { 
                 if (await bcrypt.compare(password, employee.user_account.password)) {
-                    return done(null, { userId: account.id, username: `${employee.first_name} ${employee.last_name}`, position: employee.position });
+                    return done(null, { userId: employee.user_account.id, username: `${employee.first_name} ${employee.last_name}`, position: employee.position });
                 }
                 else return done(null, false, { message: 'Password incorrect' });
             } catch (err) {
@@ -264,16 +254,21 @@ authRoute.get('/user', checkCredentials, async (req, res) => {
     const profile = (req.user as TokenInterface);
     if(!profile) return res.status(404).json({ error: "Invalid user" });
     try {
-        const profileImage = await dataPool.employee.findUnique({
+        const profileImage = await dataPool.account.findUnique({
             where: {
                 id: profile.userId
             },
             select: {
-                profile_image: true
+                employee: { 
+                    select: {
+                        id: true,
+                        profile_image: true
+                    }
+                }
             }
         });
         if(!profileImage) return res.status(404).json({ error: "Invalid user" });
-        return res.status(200).json({ account: { id: profile.userId, username: profile.username, position: profile.position, image: profileImage.profile_image } });
+        return res.status(200).json({ account: { id: profile.userId, username: profile.username, position: profile.position, image: profileImage.employee.profile_image, employeeId: profileImage.employee.id } });
     } catch(err) {
         return res.status(400).json({ error: (err as Error).message });
     }

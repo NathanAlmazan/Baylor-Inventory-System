@@ -109,7 +109,7 @@ export default function UpdateSupplier(props) {
       const newSupplier = await addNewSupplier(supplier.id, values.firstName, values.lastName, values.email, values.contactNumber, resultCity.city, resultProvince, values.companyName, values.website, values.address, session.access_token);
       if (newSupplier.status !== false) {
           console.log(newSupplier.data);
-          history.push("/suppliers");
+          history.back();
       } 
       else if (newSupplier.status === false) {
         console.log(newSupplier.message);

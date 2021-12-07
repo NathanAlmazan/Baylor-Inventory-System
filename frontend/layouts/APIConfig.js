@@ -1,3 +1,3 @@
 export default function API_CLIENT_SIDE() {
-    return "http://localhost:4000"
+    return "http://192.168.0.106:4000"
 }

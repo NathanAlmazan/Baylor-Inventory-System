@@ -263,7 +263,7 @@ export default function EmployeeProfile(props) {
                 setImage={event => setEmployeeImage(event.target.files[0])}
                 imageURL={imageURL}
               />
-            {!Personnel.includes(currUser.position) && (
+            {!Personnel.includes(employeeData.position) && (
                 <>
                     <EmployeeSales
                         token={currUser !== null ? currUser.access_token : null}
@@ -272,7 +272,7 @@ export default function EmployeeProfile(props) {
                         year={stsYear}
                         position={currUser.position}
                     />
-                {Boolean(ExecutivePosition.includes(currUser.position) || currUser.position === "Sales Agent") && (
+                {employeeData.position === "AGENT" && (
                     <EmployeeSalesGraph 
                         year={stsYear}
                         graphData={salesReport}
@@ -313,131 +313,131 @@ export async function getServerSideProps(ctx) {
 
 
     if (ExecutivePosition.includes(currSession.position) || currSession.userId === employeeId) {
-        if (Personnel.includes(currSession.position)) {
-            try {
-                const response = await axios({
-                url: `${process.env.API_BASE_URL}/users/graphql`,
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'KEY ' + process.env.BACKEND_KEY,
-                },
-                data: {
-                    query: `
-                    query GetEmployee ($ID: Int!) {
-                        searchEmployee (employeeId: $ID) {
-                            id
-                            full_name
-                            contact_number
-                            email
-                            position
-                            zip_code
-                            address
-                            city
-                            province
-                            profile_image
-                            sales_report
-                            is_active
-                            user_account {
-                                encoded_orders {
-                                    id 
-                                    customer {
-                                        id
-                                        full_name
+        
+        try {
+            const response = await axios({
+            url: `${process.env.API_BASE_URL}/users/graphql`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'KEY ' + process.env.BACKEND_KEY,
+            },
+            data: {
+                query: `
+                query GetEmployee ($ID: Int!) {
+                    searchEmployee (employeeId: $ID) {
+                        id
+                        full_name
+                        contact_number
+                        email
+                        position
+                        zip_code
+                        address
+                        city
+                        province
+                        profile_image
+                        sales_report
+                        is_active
+                        all_sales {
+                            id 
+                            customer {
+                                id
+                                full_name
+                            }
+                            order_date
+                            due_date
+                            delivered
+                            order_balance
+                            amount_due
+                            days_left
+                        }
+                    }
+                }
+                `,
+                variables: {
+                    ID: employeeId,
+                }
+            }
+            });
+
+            const employeeData = response.data.data;
+            
+            if (!employeeData.searchEmployee) {
+                return {
+                    notFound: true,
+                }
+            } else if (Personnel.includes(employeeData.searchEmployee.position)) {
+                try {
+                    const response = await axios({
+                    url: `${process.env.API_BASE_URL}/users/graphql`,
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'KEY ' + process.env.BACKEND_KEY,
+                    },
+                    data: {
+                        query: `
+                        query GetEmployee ($ID: Int!) {
+                            searchEmployee (employeeId: $ID) {
+                                id
+                                full_name
+                                contact_number
+                                email
+                                position
+                                zip_code
+                                address
+                                city
+                                province
+                                profile_image
+                                sales_report
+                                is_active
+                                user_account {
+                                    encoded_orders {
+                                        id 
+                                        customer {
+                                            id
+                                            full_name
+                                        }
+                                        order_date
+                                        due_date
+                                        delivered
+                                        order_balance
+                                        amount_due
+                                        days_left
                                     }
-                                    order_date
-                                    due_date
-                                    delivered
-                                    order_balance
-                                    amount_due
-                                    days_left
                                 }
                             }
                         }
-                    }
-                    `,
-                    variables: {
-                        ID: employeeId,
-                    }
-                }
-                });
-    
-            const employeeData = response.data.data;
-            
-            if (!employeeData.searchEmployee) {
-                return {
-                    notFound: true,
-                }
-            }
-
-            const employeeInfo = employeeData.searchEmployee;
-            employeeInfo.all_sales = employeeInfo.user_account.encoded_orders;
-    
-            return {
-                props: { 
-                    employeeData: employeeInfo,
-                    currUser: currSession
-                }
-            }
-    
-            } catch (err) {
-                console.log(err)
-                return {
-                    notFound: true
-                };
-            }
-        } else {
-            try {
-                const response = await axios({
-                url: `${process.env.API_BASE_URL}/users/graphql`,
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'KEY ' + process.env.BACKEND_KEY,
-                },
-                data: {
-                    query: `
-                    query GetEmployee ($ID: Int!) {
-                        searchEmployee (employeeId: $ID) {
-                            id
-                            full_name
-                            contact_number
-                            email
-                            position
-                            zip_code
-                            address
-                            city
-                            province
-                            profile_image
-                            sales_report
-                            is_active
-                            all_sales {
-                                id 
-                                customer {
-                                    id
-                                    full_name
-                                }
-                                order_date
-                                due_date
-                                delivered
-                                order_balance
-                                amount_due
-                                days_left
-                            }
+                        `,
+                        variables: {
+                            ID: employeeId,
                         }
                     }
-                    `,
-                    variables: {
-                        ID: employeeId,
+                    });
+        
+                const employeeData = response.data.data;
+                
+                if (!employeeData.searchEmployee) {
+                    return {
+                        notFound: true,
                     }
                 }
-                });
 
-            const employeeData = response.data.data;
-            
-            if (!employeeData.searchEmployee) {
+                const employeeInfo = employeeData.searchEmployee;
+                employeeInfo.all_sales = employeeInfo.user_account.encoded_orders;
+        
                 return {
-                    notFound: true,
+                    props: { 
+                        employeeData: employeeInfo,
+                        currUser: currSession
+                    }
+                }
+        
+                } catch (err) {
+                    console.log(err)
+                    return {
+                        notFound: true
+                    };
                 }
             }
 
@@ -448,13 +448,13 @@ export async function getServerSideProps(ctx) {
                 }
             }
 
-            } catch (err) {
-                console.log(err)
-                return {
-                    notFound: true
-                };
-            }
+        } catch (err) {
+            console.log(err)
+            return {
+                notFound: true
+            };
         }
+        
     } else {
         return {
             redirect: {

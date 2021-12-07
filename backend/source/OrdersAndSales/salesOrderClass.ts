@@ -3,7 +3,9 @@ import path from "path";
 import fs from "fs";
 import * as hbs from "handlebars";
 import puppeteer from "puppeteer";
+import dotenv from "dotenv";
 
+dotenv.config();
 const dataPool = new PrismaClient();
 
 export interface OrderProducts {
@@ -931,7 +933,8 @@ export async function generateInvoicePDF(orderId: number) {
         if (!orderInvoice) return { status: false, message: "Order does not exist." };
         if (orderInvoice.sold != null) return { status: false, message: "Order is already paid." };
 
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.connect({ browserWSEndpoint: process.env.BROWSER_URL });
+
         const page = await browser.newPage();
         const content = await compile('Invoice', orderId);
         const fileName = orderId + "_" + new Date().toISOString().split('.')[0];
@@ -978,7 +981,8 @@ export async function generateReceiptPDF(orderId: number) {
         if (!orderReceipt) return { status: false, message: "Order does not exist." };
         if (orderReceipt.transactions.length == 0) return { status: false, message: "This order has no payments yet." };
 
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.connect({ browserWSEndpoint: process.env.BROWSER_URL });
+        
         const page = await browser.newPage();
         const content = await compileReceipt('receipt', orderId);
         const fileName = orderId + "_" + new Date().toISOString().split('.')[0];

@@ -40,7 +40,7 @@ export default function UserMoreMenu(props) {
   const cancelOrder = async () => {
     try {
       await axios.get(`${baseURL}/sales/hold-order/${id}`, config);
-      setOpenSuccess(`Sucess: Order ${id} was canceled successfully. You can restore canceled order by navigating to canceled orders' page.`);
+      setOpenSuccess(`Sucess: Order ${id} was canceled successfully. You can restore canceled order by navigating to archived sales orders' page.`);
       setIsOpen(false);
 
     } catch (err) {

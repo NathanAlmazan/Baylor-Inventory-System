@@ -3,24 +3,31 @@ version: "3.9"
 services: 
 
     baylor-api: 
-          build: ./backend
-          ports: 
-              - "4000:4000"
-          volumes: 
-              - app-data:/usr/src/app/build/media
-          networks:
-              - node-app
-          depends_on:
-              - postgresql
+        build: ./backend
+        ports: 
+            - "4000:4000"
+        volumes: 
+            - app-data:/usr/src/app/build/media
+        networks:
+            - node-app
+        depends_on:
+            - postgresql
 
     baylor-frontend: 
-          build: ./frontend
-          ports: 
-              - "3000:3000"
-          networks:
-              - node-app
-          depends_on:
-              - baylor-api
+        build: ./frontend
+        ports: 
+            - "3000:3000"
+        networks:
+            - node-app
+        depends_on:
+            - baylor-api
+
+    chronium-browserless: 
+        image: browserless/chrome
+        ports: 
+            - "6000:3000"
+        networks:
+            - node-app
 
     postgresql:
         image: postgres
