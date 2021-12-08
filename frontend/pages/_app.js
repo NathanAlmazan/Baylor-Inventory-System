@@ -22,7 +22,7 @@ function MyApp({ Component,  emotionCache = clientSideEmotionCache, pageProps })
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Baylor Company</title>
+        <title>Baylor Supreme Trading Inc.</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeConfig>

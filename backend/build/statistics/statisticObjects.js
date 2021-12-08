@@ -363,7 +363,7 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                             }
                         }
                     });
-                    if (overdueOrders != 0) {
+                    if (overdueOrders != 0 && CustomPosition.includes(context.position)) {
                         notifications.push({
                             title: "Overdue",
                             description: overdueOrders > 1 ? `${overdueOrders} customer credits lapsed on due date` : `${overdueOrders} customer credit lapsed on due date`,
@@ -383,7 +383,7 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                             }
                         }
                     });
-                    if (overduePurchase != 0) {
+                    if (overduePurchase != 0 && CustomPosition.includes(context.position)) {
                         notifications.push({
                             title: "Overdue",
                             description: overduePurchase > 1 ? `${overduePurchase} payables lapsed on due date` : `${overduePurchase} payable lapsed on due date`,

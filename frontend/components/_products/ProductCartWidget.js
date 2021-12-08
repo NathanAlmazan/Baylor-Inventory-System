@@ -28,10 +28,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CartWidget() {
+export default function CartWidget({ value }) {
   return (
     <RootStyle>
-      <Badge showZero badgeContent={0} color="error" max={99}>
+      <Badge showZero badgeContent={value} color="error" max={99}>
         <ShoppingCartIcon width={24} height={24} />
       </Badge>
     </RootStyle>

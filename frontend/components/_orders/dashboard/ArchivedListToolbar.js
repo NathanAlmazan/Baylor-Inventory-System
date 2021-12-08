@@ -69,7 +69,7 @@ export default function OrderListToolbar(props) {
           <SearchStyle
             value={filterName}
             onChange={event => onFilterName(event.target.value)}
-            placeholder={`Search ${selected}...`}
+            placeholder={`Search ${selected === "Order ID" ? "Invoice" : selected}...`}
             startAdornment={
               <InputAdornment position="start">
                 <Box component={SearchIcon} sx={{ color: 'text.disabled' }} />

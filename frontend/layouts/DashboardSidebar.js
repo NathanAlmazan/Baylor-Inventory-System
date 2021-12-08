@@ -109,7 +109,11 @@ const RootStyle = styled('div')(({ theme }) => ({
                 <NavSection navConfig={CashierConfig} />
               )}
               
-              {user.position === "Warehouse Staff" || user.position === "Delivery Personnel" && (
+              {user.position === "Warehouse Staff" && (
+                <NavSection navConfig={WarehouseConfig} />
+              )}
+
+              {user.position === "Delivery Personnel" && (
                 <NavSection navConfig={WarehouseConfig} />
               )}
 
@@ -173,7 +177,11 @@ const RootStyle = styled('div')(({ theme }) => ({
                 <NavSection navConfig={CashierConfig} />
               )}
               
-              {user.position === "Warehouse Staff" || user.position === "Delivery Personnel" && (
+              {user.position === "Warehouse Staff" && (
+                <NavSection navConfig={WarehouseConfig} />
+              )}
+
+              {user.position === "Delivery Personnel" && (
                 <NavSection navConfig={WarehouseConfig} />
               )}
 

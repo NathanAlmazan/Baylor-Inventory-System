@@ -16,12 +16,14 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const mail = nodemailer_1.default.createTransport({
     service: 'Gmail',
     secure: true,
     auth: {
-        user: "nikephoros.ague@gmail.com",
-        pass: "vqpruuorqosjxxjv"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     },
 });
 const compile = (first_name, code) => __awaiter(void 0, void 0, void 0, function* () {

@@ -32,7 +32,7 @@ function renderContent(notification) {
     <Typography variant="subtitle2">
       {notification.title}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {notification.title === "Total receivables" ? notification.description : noCase(notification.description)}
       </Typography>
     </Typography>
   );

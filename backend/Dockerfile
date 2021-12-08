@@ -17,6 +17,8 @@ ENV DATABASE_PASSWORD="b4yl0rtr4d1ng"
 ENV DATABASE_PORT="5432"
 ENV FRONTEND_SECRET="INp8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGo8IvdIyeMcoGAgFGogFGo8IvdIyeMco"
 ENV BROWSER_URL="ws://chronium-browserless:3000"
+ENV EMAIL_USER="nikephoros.ague@gmail.com"
+ENV EMAIL_PASS="vqpruuorqosjxxjv"
 
 RUN npx prisma generate
 

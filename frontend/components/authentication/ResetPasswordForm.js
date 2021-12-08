@@ -161,7 +161,7 @@ export default function ResetPasswordForm(props) {
           variant="contained"
           loading={isSubmitting}
         >
-          Get Reset Code
+          Reset Password
         </LoadingButton>
       </Form>
     </FormikProvider>

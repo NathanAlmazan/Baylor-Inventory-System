@@ -391,7 +391,7 @@ export async function getStaticProps(ctx) {
     
       return {
         props: { statistics: appStatistics },
-        revalidate: 60 * 5
+        revalidate: 60
       }
   } catch (err) {
     return {

@@ -11,7 +11,6 @@ const ProductWindow = dynamic(() => import("./ProductWindow"));
 
 export default function ProductDialog(props) {
   const { open, setOpen, setOrders, orderProducts, products, categories } = props;
-  const fullScreen = useMediaQuery("(max-width: 600px)");
 
   const handleClose = () => {
     setOpen(false);
@@ -20,11 +19,10 @@ export default function ProductDialog(props) {
   return (
       <Dialog
         fullWidth={true}
-        fullScreen={fullScreen}
+        fullScreen={true}
         maxWidth="lg"
         open={open}
         onClose={handleClose}
-        sx={!fullScreen ? { maxHeight: "80vh" } : {}}
       >
         <DialogTitle>Select Products</DialogTitle>
         <DialogContent>

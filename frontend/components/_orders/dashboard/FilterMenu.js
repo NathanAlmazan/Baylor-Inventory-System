@@ -34,7 +34,7 @@ export default function FilterMenu(props) {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem selected={Boolean(selected === "Order ID")} onClick={event => handleMenuChange("Order ID")} sx={{ color: 'text.secondary' }}>
-          <ListItemText primary="Order ID" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Invoice ID" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem selected={Boolean(selected === "Customer")} onClick={event => handleMenuChange("Customer")} sx={{ color: 'text.secondary' }}>

@@ -199,7 +199,7 @@ export default function Products({ allProducts, allCategories, currUser }) {
         </Stack>
 
         <ProductList products={filteredProducts} archived={false} />
-        <ProductCartWidget />
+        <ProductCartWidget value={filteredProducts.length} />
       </Container>
   );
 }

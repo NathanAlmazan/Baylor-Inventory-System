@@ -320,7 +320,7 @@ authRoute.post('/resetPassword', (req, res) => __awaiter(void 0, void 0, void 0,
             return res.status(400).json({ error: err.message });
         }
         //send success response
-        return res.status(200).json({ message: "Email send success", accountId: accountVerify.id });
+        return res.status(200).json({ message: "Email send success", accountId: accountVerify.user_account.id });
     }
     catch (err) {
         return res.status(400).json({ error: err.message });

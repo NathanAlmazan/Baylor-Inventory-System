@@ -293,7 +293,7 @@ export default function EmployeeProfile(props) {
 export async function getServerSideProps(ctx) {
     const currSession = await getSession(ctx);
     const ExecutivePosition = ["President", "Vice President", "Manager"];
-    const Personnel = ["Cashier", "Accountant"];
+    const Personnel = ["CASHIER", "ACCOUNTANT"];
 
     if (!currSession) {
       return {
@@ -311,11 +311,20 @@ export async function getServerSideProps(ctx) {
         };
     }
 
+    const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'JWT ' + currSession.access_token,
+        }
+      }
 
-    if (ExecutivePosition.includes(currSession.position) || currSession.userId === employeeId) {
+    const result = await axios.get(`${process.env.API_BASE_URL}/users/user`, config);
+    const profile = result.data.account;
+
+    if (ExecutivePosition.includes(currSession.position) || profile.employeeId === employeeId) {
         
         try {
-            const response = await axios({
+            const response_1 = await axios({
             url: `${process.env.API_BASE_URL}/users/graphql`,
             method: 'post',
             headers: {
@@ -360,15 +369,15 @@ export async function getServerSideProps(ctx) {
             }
             });
 
-            const employeeData = response.data.data;
+            const employeeData_1 = response_1.data.data;
             
-            if (!employeeData.searchEmployee) {
+            if (!employeeData_1.searchEmployee) {
                 return {
                     notFound: true,
                 }
-            } else if (Personnel.includes(employeeData.searchEmployee.position)) {
+            } else if (Personnel.includes(employeeData_1.searchEmployee.position)) {
                 try {
-                    const response = await axios({
+                    const response_2 = await axios({
                     url: `${process.env.API_BASE_URL}/users/graphql`,
                     method: 'post',
                     headers: {
@@ -389,7 +398,6 @@ export async function getServerSideProps(ctx) {
                                 city
                                 province
                                 profile_image
-                                sales_report
                                 is_active
                                 user_account {
                                     encoded_orders {
@@ -415,15 +423,15 @@ export async function getServerSideProps(ctx) {
                     }
                     });
         
-                const employeeData = response.data.data;
+                const employeeData_2 = response_2.data.data;
                 
-                if (!employeeData.searchEmployee) {
+                if (!employeeData_2.searchEmployee) {
                     return {
                         notFound: true,
                     }
                 }
 
-                const employeeInfo = employeeData.searchEmployee;
+                const employeeInfo = employeeData_2.searchEmployee;
                 employeeInfo.all_sales = employeeInfo.user_account.encoded_orders;
         
                 return {
@@ -439,12 +447,12 @@ export async function getServerSideProps(ctx) {
                         notFound: true
                     };
                 }
-            }
-
-            return {
-                props: { 
-                    employeeData: employeeData.searchEmployee,
-                    currUser: currSession
+            } else {
+                return {
+                    props: { 
+                        employeeData: employeeData_1.searchEmployee,
+                        currUser: currSession
+                    }
                 }
             }
 
