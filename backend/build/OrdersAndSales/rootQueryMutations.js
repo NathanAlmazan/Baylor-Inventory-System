@@ -8,13 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RootMutation = exports.RootQuery = void 0;
 const graphql_1 = require("graphql");
 const graphqlObjects_1 = require("./graphqlObjects");
-const client_1 = require("@prisma/client");
 const graphql_scalars_1 = require("graphql-scalars");
-const dataPool = new client_1.PrismaClient(); //database pool
+const prismaClient_1 = __importDefault(require("../prismaClient"));
 const UnAuthorized = ["Warehouse Staff", "Delivery Personnel", "Sales Agent"];
 ;
 const DateRangeEnum = new graphql_1.GraphQLEnumType({
@@ -38,7 +40,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             },
             resolve: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const customerOrders = yield dataPool.order.findMany({
+                    const customerOrders = yield prismaClient_1.default.order.findMany({
                         where: {
                             customer_id: args.customer_id,
                             is_active: true
@@ -62,7 +64,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             },
             resolve: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const order = yield dataPool.order.findUnique({
+                    const order = yield prismaClient_1.default.order.findUnique({
                         where: {
                             id: args.id
                         }
@@ -85,7 +87,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             resolve: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
                 if (args.id != null) {
                     try {
-                        const order = yield dataPool.order.findMany({
+                        const order = yield prismaClient_1.default.order.findMany({
                             where: {
                                 AND: {
                                     id: args.id,
@@ -102,11 +104,11 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                 else if (args.customer_name != null) {
                     const customerName = "%" + args.customer_name + "%";
                     try {
-                        const searchedCustomers = yield dataPool.$queryRaw `SELECT id FROM "public"."Customer" WHERE CONCAT(first_name, ' ', last_name) LIKE ${customerName}`;
+                        const searchedCustomers = yield prismaClient_1.default.$queryRaw `SELECT id FROM "public"."Customer" WHERE CONCAT(first_name, ' ', last_name) LIKE ${customerName}`;
                         let orderList = [];
                         for (let i = 0; i < searchedCustomers.length; i++) {
                             const currCustomer = searchedCustomers[i];
-                            const orders = yield dataPool.order.findMany({
+                            const orders = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         customer_id: currCustomer.id,
@@ -125,11 +127,11 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                 else if (args.agent_name != null) {
                     const agentName = "%" + args.agent_name + "%";
                     try {
-                        const searchedAgents = yield dataPool.$queryRaw `SELECT id FROM "public"."Employee" WHERE CONCAT(first_name, ' ', last_name) LIKE ${agentName}`;
+                        const searchedAgents = yield prismaClient_1.default.$queryRaw `SELECT id FROM "public"."Employee" WHERE CONCAT(first_name, ' ', last_name) LIKE ${agentName}`;
                         let orderList = [];
                         for (let i = 0; i < searchedAgents.length; i++) {
                             const currAgent = searchedAgents[i];
-                            const orders = yield dataPool.order.findMany({
+                            const orders = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         employee_id: currAgent.id,
@@ -155,7 +157,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             description: "Return all Orders that are on hold",
             resolve: () => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const holdOrders = yield dataPool.order.findMany({
+                    const holdOrders = yield prismaClient_1.default.order.findMany({
                         where: {
                             is_active: false
                         },
@@ -175,7 +177,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             description: "Return all Orders that are overdue",
             resolve: () => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const overdueOrders = yield dataPool.order.findMany({
+                    const overdueOrders = yield prismaClient_1.default.order.findMany({
                         where: {
                             AND: {
                                 due_date: {
@@ -198,7 +200,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             description: "Return all Orders that are overdue",
             resolve: () => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const toBeDelivered = yield dataPool.order.findMany({
+                    const toBeDelivered = yield prismaClient_1.default.order.findMany({
                         where: {
                             AND: {
                                 delivered: null,
@@ -223,7 +225,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             resolve: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
                 if (args.startDate && args.endDate) {
                     try {
-                        const salesOrder = yield dataPool.sales.findMany({
+                        const salesOrder = yield prismaClient_1.default.sales.findMany({
                             where: {
                                 date_paid: {
                                     gte: args.startDate,
@@ -242,7 +244,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                 }
                 else if (!args.startDate && !args.endDate) {
                     try {
-                        const salesOrder = yield dataPool.sales.findMany({
+                        const salesOrder = yield prismaClient_1.default.sales.findMany({
                             where: {
                                 date_paid: {
                                     lte: new Date()
@@ -265,7 +267,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             description: "Return all comany customers",
             resolve: () => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const allCustomers = yield dataPool.customer.findMany({
+                    const allCustomers = yield prismaClient_1.default.customer.findMany({
                         where: {
                             is_active: true
                         },
@@ -285,7 +287,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
             description: "Return all comany customers",
             resolve: () => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const allCustomers = yield dataPool.customer.findMany({
+                    const allCustomers = yield prismaClient_1.default.customer.findMany({
                         where: {
                             is_active: false
                         },
@@ -310,7 +312,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                 if (!args)
                     throw new Error("Invalid arguments.");
                 try {
-                    const resultCustomer = yield dataPool.customer.findUnique({
+                    const resultCustomer = yield prismaClient_1.default.customer.findUnique({
                         where: {
                             id: args.id
                         },
@@ -337,7 +339,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         let finalDate = new Date(dateSelected);
                         finalDate.setDate(finalDate.getDate() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         due_date: {
@@ -361,7 +363,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
                         const lastday = new Date(curr.setDate(firstday.getDate() + 7));
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         due_date: {
@@ -385,7 +387,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const currMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth());
                         const nextMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         due_date: {
@@ -409,7 +411,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() - 3);
                         const lastMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         due_date: {
@@ -446,7 +448,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         let finalDate = new Date(dateSelected);
                         finalDate.setDate(finalDate.getDate() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         order_date: {
@@ -470,7 +472,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
                         const lastday = new Date(curr.setDate(firstday.getDate() + 7));
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         order_date: {
@@ -494,7 +496,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const currMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth());
                         const nextMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         order_date: {
@@ -518,7 +520,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() - 3);
                         const lastMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() + 1);
                         try {
-                            const orderList = yield dataPool.order.findMany({
+                            const orderList = yield prismaClient_1.default.order.findMany({
                                 where: {
                                     AND: {
                                         order_date: {
@@ -555,7 +557,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         let finalDate = new Date(dateSelected);
                         finalDate.setDate(finalDate.getDate() + 1);
                         try {
-                            const transactionList = yield dataPool.transaction.findMany({
+                            const transactionList = yield prismaClient_1.default.transaction.findMany({
                                 where: {
                                     payment_date: {
                                         gte: dateSelected,
@@ -573,7 +575,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
                         const lastday = new Date(curr.setDate(firstday.getDate() + 7));
                         try {
-                            const transactionList = yield dataPool.transaction.findMany({
+                            const transactionList = yield prismaClient_1.default.transaction.findMany({
                                 where: {
                                     payment_date: {
                                         gte: firstday.toISOString(),
@@ -591,7 +593,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const currMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth());
                         const nextMonth = new Date(inputMonth.getFullYear(), inputMonth.getMonth() + 1);
                         try {
-                            const transactionList = yield dataPool.transaction.findMany({
+                            const transactionList = yield prismaClient_1.default.transaction.findMany({
                                 where: {
                                     payment_date: {
                                         gte: currMonth.toISOString(),
@@ -609,7 +611,7 @@ exports.RootQuery = new graphql_1.GraphQLObjectType({
                         const firstMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() - 3);
                         const lastMonth = new Date(initMonth.getFullYear(), initMonth.getMonth() + 1);
                         try {
-                            const transactionList = yield dataPool.transaction.findMany({
+                            const transactionList = yield prismaClient_1.default.transaction.findMany({
                                 where: {
                                     payment_date: {
                                         gte: firstMonth.toISOString(),
@@ -649,7 +651,7 @@ exports.RootMutation = new graphql_1.GraphQLObjectType({
                 if (!args.contact_number && !args.email && !args.website)
                     throw new Error("Need at least one contact information.");
                 try {
-                    const newCustomer = yield dataPool.customer.create({
+                    const newCustomer = yield prismaClient_1.default.customer.create({
                         data: {
                             company_name: args.company_name,
                             first_name: args.first_name,
@@ -687,7 +689,7 @@ exports.RootMutation = new graphql_1.GraphQLObjectType({
             },
             resolve: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
                 try {
-                    const updatedCustomer = yield dataPool.customer.update({
+                    const updatedCustomer = yield prismaClient_1.default.customer.update({
                         where: {
                             id: args.id
                         },
@@ -721,7 +723,7 @@ exports.RootMutation = new graphql_1.GraphQLObjectType({
                 if (UnAuthorized.includes(context.position))
                     throw new Error("Unauthorized");
                 try {
-                    const removedCustomer = yield dataPool.customer.update({
+                    const removedCustomer = yield prismaClient_1.default.customer.update({
                         where: {
                             id: args.id
                         },
@@ -746,7 +748,7 @@ exports.RootMutation = new graphql_1.GraphQLObjectType({
                 if (UnAuthorized.includes(context.position))
                     throw new Error("Unauthorized");
                 try {
-                    const deletedCustomer = yield dataPool.customer.delete({
+                    const deletedCustomer = yield prismaClient_1.default.customer.delete({
                         where: {
                             id: args.id
                         }
