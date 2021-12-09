@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 // material
 import { styled } from '@mui/material/styles';
 import { Stack, Link, Container, Typography } from '@mui/material';
+import { getSession } from 'next-auth/client';
 // components
 import dynamic from "next/dynamic";
 
@@ -59,5 +60,17 @@ export default function Login() {
       </Container>
     </RootStyle>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  const currSession = await getSession(ctx);
+  if (currSession) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/'
+      }
+    }
+  }
 }
 

@@ -432,7 +432,7 @@ export async function getServerSideProps(ctx) {
                 }
 
                 const employeeInfo = employeeData_2.searchEmployee;
-                employeeInfo.all_sales = employeeInfo.user_account.encoded_orders;
+                employeeInfo.all_sales = employeeInfo.user_account !== null ? employeeInfo.user_account.encoded_orders : [];
         
                 return {
                     props: { 
