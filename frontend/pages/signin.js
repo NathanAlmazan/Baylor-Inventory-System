@@ -29,7 +29,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function Login({ currUser }) {
     const history = useRouter();
     
     const onRouterClick = (e, path) => {
@@ -70,6 +70,12 @@ export async function getServerSideProps(ctx) {
         permanent: false,
         destination: '/'
       }
+    }
+  }
+
+  return {
+    props: { 
+      currUser: currSession
     }
   }
 }
