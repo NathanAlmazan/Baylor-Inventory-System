@@ -21,7 +21,7 @@ function stringAvatar(name) {
   }
 
 function SupplierBody(props) {
-    const { suppliers, position } = props;
+    const { suppliers, position, redirect } = props;
     return (
         <TableBody>
             {suppliers.map((row) => {
@@ -30,6 +30,7 @@ function SupplierBody(props) {
                 return (
                 <TableRow
                     hover
+                    onClick={() => redirect(`/suppliers/profile/${id}`)}
                     key={id}
                     tabIndex={-1}
                     role="checkbox"

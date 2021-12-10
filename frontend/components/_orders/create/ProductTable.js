@@ -16,7 +16,7 @@ export default function ProductTable(props) {
    
     return (
             <Scrollbar>
-                <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+                <Table sx={{ minWidth: 900 }} aria-label="spanning table">
                 <TableHead>
                     <TableRow>
                     <TableCell align="center" colSpan={3}>

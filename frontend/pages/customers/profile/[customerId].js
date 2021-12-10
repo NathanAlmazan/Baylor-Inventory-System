@@ -6,6 +6,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
 import API_CLIENT_SIDE from '../../../layouts/APIConfig';
@@ -21,6 +23,7 @@ export default function UpdateCustomer(props) {
     const history = useRouter();
     const [customerOrders, setCustomerOrders] = useState(customerData.all_orders);
     const [stsYear, setYear] = useState(null);
+    const matches = useMediaQuery('(min-width:600px)');
     const AllowedPosition = ["President", "Vice President", "Manager"];
 
     useEffect(() => {
@@ -219,38 +222,70 @@ export default function UpdateCustomer(props) {
                     <Typography variant="h4" gutterBottom>
                         Customer Profile
                     </Typography>
-                    <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => history.push("/customers/edit/" + customerData.id)}
-                        startIcon={<EditIcon />}
-                    >
-                        Edit
-                    </Button>
-                    {AllowedPosition.includes(currUser.position) && (
-                        customerData.is_active ? (
-                            <Button
-                                disabled={Boolean(customerData.total_credits > 0)}
-                                variant="contained"
-                                color="error"
-                                onClick={() => handleArchive()}
-                                startIcon={<ArchiveIcon />}
-                            >
-                                Archive
-                            </Button>
-                        ) : (
+                    {matches ? (
+                        <Stack direction="row" justifyContent="flex-end" spacing={2}>
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => handleUnarchived()}
-                                startIcon={<UnarchiveIcon />}
+                                onClick={() => history.push("/customers/edit/" + customerData.id)}
+                                startIcon={<EditIcon />}
                             >
-                                Unarchive
+                                Edit
                             </Button>
-                        )
+                            {AllowedPosition.includes(currUser.position) && (
+                                customerData.is_active ? (
+                                    <Button
+                                        disabled={Boolean(customerData.total_credits > 0)}
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => handleArchive()}
+                                        startIcon={<ArchiveIcon />}
+                                    >
+                                        Archive
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleUnarchived()}
+                                        startIcon={<UnarchiveIcon />}
+                                    >
+                                        Unarchive
+                                    </Button>
+                                )
+                            )}
+                        </Stack>
+                    ) : (
+                        <Stack direction="row" justifyContent="flex-end">
+                            <IconButton
+                                size="large"
+                                color="secondary"
+                                onClick={() => history.push("/customers/edit/" + customerData.id)}
+                            >
+                                <EditIcon fontSize="medium" />
+                            </IconButton>
+                            {AllowedPosition.includes(currUser.position) && (
+                                customerData.is_active ? (
+                                    <IconButton
+                                        disabled={Boolean(customerData.total_credits > 0)}
+                                        size="large"
+                                        color="error"
+                                        onClick={() => handleArchive()}
+                                    >
+                                        <ArchiveIcon fontSize="medium" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton
+                                        size="large"
+                                        color="secondary"
+                                        onClick={() => handleUnarchived()}
+                                    >
+                                        <UnarchiveIcon fontSize="medium" />
+                                    </IconButton>
+                                )
+                            )}
+                        </Stack>
                     )}
-                </Stack>
                 </Stack>
 
                 <Stack direction="column" spacing={3}>
@@ -266,6 +301,7 @@ export default function UpdateCustomer(props) {
                         purpose="customerData" 
                         changeYear={(event, value) => handleYearChange(event, value)}  
                         year={stsYear}
+                        redirect={value => history.push(value)}
                     />
                 </Stack>
                 {Boolean(customerData.all_orders.length === 0 && !customerData.is_active) && (

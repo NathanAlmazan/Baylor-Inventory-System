@@ -40,7 +40,7 @@ app.use('/backup', backupRoute);
 //statistics
 app.use('/statistics', statisticsRoute);
 
-schedule.scheduleJob('0 14 * * *', () => {
+schedule.scheduleJob('0 */4 * * *', () => {
     CreateBackup();
 });
 

@@ -1,5 +1,4 @@
 import SearchIcon from '@mui/icons-material/Search';
-import Grid from '@mui/material/Grid';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import EmployeeMenu from './EmployeeMenu';
@@ -51,36 +50,31 @@ export default function OrderListToolbar(props) {
 
   return (
     <RootStyle>
-        <Grid container direction="row" justifyContent="space-between">
-            <Grid item>
-                <EmployeeMenu selected={selected} setSelected={value => setSelected(value)} />
-                <SearchStyle
-                    value={filterName}
-                    onChange={event => onFilterName(event.target.value)}
-                    placeholder={`Search ${selected === "Order ID" ? "Invoice ID" : selected}...`}
-                    startAdornment={
-                    <InputAdornment position="start">
-                        <Box component={SearchIcon} sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                    }
-                />
-            </Grid>
+      <Stack direction="row" spacing={1}>
+          <SearchStyle
+              value={filterName}
+              onChange={event => onFilterName(event.target.value)}
+              placeholder={`Search ${selected === "Order ID" ? "Invoice ID" : selected}...`}
+              startAdornment={
+              <InputAdornment position="start">
+                  <Box component={SearchIcon} sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+              }
+          />
+            <EmployeeMenu selected={selected} setSelected={value => setSelected(value)} />
+      </Stack>
 
-            <Grid item>
-                <Stack direction="row" justifyContent="flex-end" spacing={2} alignItems="center">
-                    <IconButton onClick={event => changeYear(event, "back")}>
-                        <KeyboardArrowLeftIcon  />
-                    </IconButton>
-                    <Typography variant="subtitle2">
-                        {year !== null ? year : new Date().getFullYear()}
-                    </Typography>
-                    <IconButton onClick={event => changeYear(event, "next")}>
-                        <KeyboardArrowRightIcon  />
-                    </IconButton>
-                </Stack>
-            </Grid>
-        </Grid>
-
+      <Stack direction="row" spacing={2} alignItems="center">
+          <IconButton onClick={event => changeYear(event, "back")}>
+              <KeyboardArrowLeftIcon  />
+          </IconButton>
+          <Typography variant="subtitle2">
+              {year !== null ? year : new Date().getFullYear()}
+          </Typography>
+          <IconButton onClick={event => changeYear(event, "next")}>
+              <KeyboardArrowRightIcon  />
+          </IconButton>
+      </Stack>
     </RootStyle>
   );
 }

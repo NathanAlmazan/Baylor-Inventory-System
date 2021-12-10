@@ -64,9 +64,7 @@ export default function OrderListToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Stack direction="row" spacing={2}>
-          <FilterMenu selected={selected} setSelected={value => setSelected(value)} />
-
+        <Stack direction="row" spacing={1}>
           <SearchStyle
             value={filterName}
             onChange={event => onFilterName(event.target.value)}
@@ -77,6 +75,7 @@ export default function OrderListToolbar(props) {
               </InputAdornment>
             }
           />
+          <FilterMenu selected={selected} setSelected={value => setSelected(value)} />
         </Stack>
         
       )}

@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const OrderMoreMenu = dynamic(() => import("../../_orders/dashboard/OrderMoreMenu"));
 const Label = dynamic(() => import("../../Label"));
 
-function CustomerOrderRow({ data, token }) {
+function CustomerOrderRow({ data, token, redirect }) {
     const { id, employee, order_date, due_date, order_balance, days_left, delivered, amount_due, transactions } = data;
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
     const isPaid = Boolean(order_balance <= 0);
@@ -17,6 +17,7 @@ function CustomerOrderRow({ data, token }) {
         <>
         <TableRow
             hover
+            onClick={() => redirect(`/orders/profile/${id}`)}
         >
             <TableCell component="th" scope="row" padding="none" align="right">
                 <Typography variant="subtitle2" noWrap>

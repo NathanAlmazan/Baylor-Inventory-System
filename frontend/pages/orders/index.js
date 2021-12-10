@@ -36,7 +36,7 @@ export default function SalesOrder(props) {
                     onClick={e => onRedirect(e, "/orders/create")}
                     startIcon={<AddIcon />}
                 >
-                    Create Order
+                    Create
                 </Button>
             </Stack>
 

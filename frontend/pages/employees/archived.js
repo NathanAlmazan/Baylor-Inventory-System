@@ -113,7 +113,7 @@ export default function EmployeeArchived({ allEmployees }) {
                     onClick={() => history.push("/employees")}
                     startIcon={<ArrowBackIcon />}
                     >
-                    Active Employees
+                    Active
                 </Button>
             </Stack>
 

@@ -6,6 +6,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
 import API_CLIENT_SIDE from '../../../layouts/APIConfig';
@@ -21,6 +23,7 @@ export default function UpdateCustomer(props) {
     const history = useRouter();
     const [supplierOrders, setSupplierOrders] = useState(supplierData.supplied_orders);
     const [stsYear, setYear] = useState(null);
+    const matches = useMediaQuery('(min-width:600px)');
     const AllowedPosition = ["President", "Vice President", "Manager"];
 
     useEffect(() => {
@@ -214,38 +217,70 @@ export default function UpdateCustomer(props) {
                     <Typography variant="h4" gutterBottom>
                         Supplier Profile
                     </Typography>
-                    <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => history.push("/suppliers/edit/" + supplierData.id)}
-                        startIcon={<EditIcon />}
-                    >
-                        Edit
-                    </Button>
-                    {AllowedPosition.includes(currUser.position) && (
-                        supplierData.is_active ? (
-                            <Button
-                                disabled={Boolean(supplierData.total_collecting > 0)}
-                                variant="contained"
-                                color="error"
-                                onClick={() => handleArchive()}
-                                startIcon={<ArchiveIcon />}
-                            >
-                                Archive
-                            </Button>
-                        ) : (
+                    {matches ? (
+                        <Stack direction="row" justifyContent="flex-end">
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => handleUnarchived()}
-                                startIcon={<UnarchiveIcon />}
+                                onClick={() => history.push("/suppliers/edit/" + supplierData.id)}
+                                startIcon={<EditIcon />}
                             >
-                                Unarchive
+                                Edit
                             </Button>
-                        )
+                            {AllowedPosition.includes(currUser.position) && (
+                                supplierData.is_active ? (
+                                    <Button
+                                        disabled={Boolean(supplierData.total_collecting > 0)}
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => handleArchive()}
+                                        startIcon={<ArchiveIcon />}
+                                    >
+                                        Archive
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleUnarchived()}
+                                        startIcon={<UnarchiveIcon />}
+                                    >
+                                        Unarchive
+                                    </Button>
+                                )
+                            )}
+                        </Stack>
+                    ) : (
+                        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                            <IconButton
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => history.push("/suppliers/edit/" + supplierData.id)}
+                            >
+                                <EditIcon fontSize="medium" />
+                            </IconButton>
+                            {AllowedPosition.includes(currUser.position) && (
+                                supplierData.is_active ? (
+                                    <IconButton
+                                        disabled={Boolean(supplierData.total_collecting > 0)}
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => handleArchive()}
+                                    >
+                                        <ArchiveIcon fontSize="medium" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleUnarchived()}
+                                    >
+                                        <UnarchiveIcon fontSize="medium" />
+                                    </IconButton>
+                                )
+                            )}
+                        </Stack>
                     )}
-                </Stack>
                 </Stack>
 
                 <Stack direction="column" spacing={3}>

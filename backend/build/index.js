@@ -39,7 +39,7 @@ app.use('/payables', purchaseRoute_1.default);
 app.use('/backup', backupRoute_1.default);
 //statistics
 app.use('/statistics', statisticsRoute_1.default);
-node_schedule_1.default.scheduleJob('0 14 * * *', () => {
+node_schedule_1.default.scheduleJob('0 */4 * * *', () => {
     (0, backupData_1.default)();
 });
 //express listen

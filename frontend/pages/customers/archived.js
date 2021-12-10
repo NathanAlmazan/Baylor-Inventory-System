@@ -136,7 +136,7 @@ export default function Customers({ allCustomers }) {
             onClick={e => onRouterClick(e, "/customers")}
             startIcon={<ArrowBackIcon />}
           >
-            Active Customers
+            Active
           </Button>
         </Stack>
 

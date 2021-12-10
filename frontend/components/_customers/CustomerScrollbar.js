@@ -12,11 +12,11 @@ const CustomerListHead = dynamic(() => import('./CustomerListHead'));
 const CustomerBody = dynamic(() => import('./TableBody'));
 
 function CustomerScrollbar(props) {
-    const { order, orderBy, headLabel, rowCount, numSelected, onRequestSort, onSelectAllClick, customers, userNotFound, searchQuery, position } = props;
+    const { order, orderBy, headLabel, rowCount, numSelected, onRequestSort, onSelectAllClick, customers, userNotFound, searchQuery, position, redirect } = props;
 
     return (
         <Scrollbar sx={{ overflowY: 'auto', maxHeight: 600 }}>
-            <Table>
+            <Table style={{ minWidth: 900 }}>
               <CustomerListHead
                 order={order}
                 orderBy={orderBy}
@@ -26,7 +26,7 @@ function CustomerScrollbar(props) {
                 onRequestSort={onRequestSort}
                 onSelectAllClick={onSelectAllClick}
               />
-              <CustomerBody customers={customers} position={position} />
+              <CustomerBody customers={customers} position={position} redirect={value => redirect(value)} />
               {userNotFound && (
                 <TableBody>
                   <TableRow>

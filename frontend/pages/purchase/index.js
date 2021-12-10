@@ -9,17 +9,11 @@ import dynamic from "next/dynamic";
 //icons
 import AddIcon from '@mui/icons-material/Add';
 
-//dynamic components
-// const AppWeeklySales = dynamic(() => import('../../components/SalesOrder/NewOrders'));
-// const AppCanceledOrders = dynamic(() => import('../../components/SalesOrder/CanceledOrders'));
-// const AppPaidWeek = dynamic(() => import('../../components/SalesOrder/PaidWeek'));
-// const AppDueToday = dynamic(() => import('../../components/SalesOrder/DueToday'));
 const PurchasedListTable = dynamic(() => import('../../components/_payables/dashboard/PurchasedListTable'));
 
 export default function PurchasedOrder(props) {
     const { currUser } = props;
     const history = useRouter();
-
 
     const onRedirect = (event, path) => {
       history.push(path);
@@ -36,7 +30,7 @@ export default function PurchasedOrder(props) {
                     onClick={e => onRedirect(e, "/purchase/create")}
                     startIcon={<AddIcon />}
                 >
-                    Record Purchase
+                    Record
                 </Button>
             </Stack>
 

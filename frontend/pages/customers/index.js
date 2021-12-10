@@ -144,6 +144,7 @@ export default function Customers({ allCustomers, currUser }) {
               userNotFound={isUserNotFound} 
               searchQuery={filterName}
               position={currUser.position}
+              redirect={value => history.push(value)}
           />
 
         </Card>

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import TuneIcon from '@mui/icons-material/Tune';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 
@@ -20,7 +20,7 @@ export default function CustomerMenu(props) {
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
-        <FilterListIcon />
+        <TuneIcon />
       </IconButton>
 
       <Menu

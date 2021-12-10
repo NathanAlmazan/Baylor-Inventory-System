@@ -327,7 +327,7 @@ exports.StatusReport = new graphql_1.GraphQLObjectType({
                     if (dueOrders != 0) {
                         notifications.push({
                             title: "Due today",
-                            description: dueOrders > 1 ? `${dueOrders} custoemr credits due today` : `${dueOrders} custoemr credit due today`,
+                            description: dueOrders > 1 ? `${dueOrders} customer credits due today` : `${dueOrders} customer credit due today`,
                             createdAt: new Date(),
                             isUnRead: true,
                             link: '/orders'

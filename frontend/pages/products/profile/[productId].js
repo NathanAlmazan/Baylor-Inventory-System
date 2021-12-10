@@ -4,6 +4,9 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
 import Grid from '@mui/material/Grid';
@@ -37,6 +40,7 @@ export default function ProductProfile(props) {
         stocks: "",
         price: ""
     });
+    const matches = useMediaQuery('(min-width:600px)');
     const history = useRouter();
 
     const ExecutivePosition = ["President", "Vice President", "Manager"];
@@ -279,6 +283,7 @@ export default function ProductProfile(props) {
                     Product Profile
                 </Typography>
             {ExecutivePosition.includes(userPosition) && (
+                matches ? (
                 <Stack direction="row" justifyContent="flex-end" spacing={2}>
                     <Button
                         variant="contained"
@@ -291,7 +296,7 @@ export default function ProductProfile(props) {
                     {active === true ? (
                         <Button
                             variant="outlined"
-                            color="secondary"
+                            color="error"
                             onClick={() => handleArchive()}
                             startIcon={<ArchiveIcon />}
                         >
@@ -318,6 +323,43 @@ export default function ProductProfile(props) {
                     )}
                     
                 </Stack>
+                ) : (
+                    <Stack direction="row" justifyContent="flex-end">
+                        <IconButton
+                            variant="contained"
+                            color="secondary"
+                            onClick={() =>  history.push("/products/edit/" + productData.id)}
+                        >
+                            <EditIcon fontSize="medium" />
+                        </IconButton>
+                        {active === true ? (
+                            <IconButton
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleArchive()}
+                            >
+                                <ArchiveIcon fontSize="medium" />
+                            </IconButton>
+                        ) : !productData.clearToDelete ? (
+                            <IconButton
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => handleUnarchived()}
+                            >
+                                <UnarchiveIcon fontSize="medium" />
+                            </IconButton>
+                        ) : (
+                            <IconButton
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleDelete()}
+                            >
+                                <DeleteIcon fontSize="medium" />
+                            </IconButton>
+                        )}
+                        
+                    </Stack>
+                )
             )}
             </Stack>
            

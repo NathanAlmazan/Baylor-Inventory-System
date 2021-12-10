@@ -77,7 +77,7 @@ const headLabel = [
 
 
 export default function ArchivedListTable(props) {
-    const { token, orders, changeYear, year } = props;
+    const { token, orders, changeYear, year, redirect } = props;
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [initialOrders, setInitialOrders] = useState(orders);
     const [filterObject, setFilterObject] = useState("");
@@ -125,6 +125,7 @@ export default function ArchivedListTable(props) {
 
     return (
         <Card sx={{ p: 3 }}>
+          <Scrollbar>
             <CustomerOrderToolbar
                 filterName={filterObject} 
                 onFilterName={value => setFilterObject(value)}
@@ -134,9 +135,9 @@ export default function ArchivedListTable(props) {
                 year={year}
                 supplier={false}
             />
-
+          </Scrollbar>
             <Scrollbar>
-                <Table>
+                <Table style={{ minWidth: 900 }}>
                     <CustomerListHead
                         order={order}
                         orderBy={orderBy}
@@ -148,7 +149,7 @@ export default function ArchivedListTable(props) {
                   {filteredOrders
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
-                      <CustomerOrderRow key={row.id} data={row} token={token}/>
+                      <CustomerOrderRow key={row.id} data={row} token={token} redirect={value => redirect(value)} />
                     ))}
                     {emptyRows > 0 && filteredOrders.length !== 0 && (
                     <TableRow style={{ height: 60 * emptyRows }}>

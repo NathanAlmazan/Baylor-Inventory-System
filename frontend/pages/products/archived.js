@@ -150,7 +150,7 @@ export default function Products({ allProducts }) {
             onClick={e => onRouterClick(e, "/customers")}
             startIcon={<ArrowBackIcon />}
           >
-            Active Prodcuts
+            Active
           </Button>
         </Stack>
 

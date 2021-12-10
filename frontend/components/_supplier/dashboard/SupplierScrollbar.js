@@ -12,11 +12,11 @@ const SupplierListHead = dynamic(() => import('./SupplierListHead'));
 const SupplierBody = dynamic(() => import('./SupplierBody'));
 
 function SupplierScrollbar(props) {
-    const { order, orderBy, headLabel, rowCount, numSelected, onRequestSort, onSelectAllClick, suppliers, userNotFound, searchQuery, position } = props;
+    const { order, orderBy, headLabel, rowCount, numSelected, onRequestSort, onSelectAllClick, suppliers, userNotFound, searchQuery, position, redirect } = props;
 
     return (
         <Scrollbar sx={{ overflowY: 'auto', maxHeight: 600 }}>
-            <Table>
+            <Table style={{ minWidth: 900 }}>
               <SupplierListHead
                 order={order}
                 orderBy={orderBy}
@@ -26,7 +26,7 @@ function SupplierScrollbar(props) {
                 onRequestSort={onRequestSort}
                 onSelectAllClick={onSelectAllClick}
               />
-              <SupplierBody suppliers={suppliers} position={position} />
+              <SupplierBody suppliers={suppliers} position={position} redirect={value => redirect(value)} />
               {userNotFound && (
                 <TableBody>
                   <TableRow>

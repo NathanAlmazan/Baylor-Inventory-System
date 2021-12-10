@@ -207,15 +207,16 @@ export default function TransactionListTable(props) {
 
     return (
         <Card sx={{ p: 5 }}>
+          <Scrollbar>
             <TransactionToolbar
                 selectedDate={selectedDate}
                 selectedRange={selectedRange}
                 onDateChange={event => handleChangeDate(event)}
                 onRangeChange={event => setSelectedRange(event.target.value)}
             />
-
+          </Scrollbar>
             <Scrollbar>
-                <Table>
+                <Table style={{ minWidth: 900 }}>
                     <TransactionListHead
                         order={order}
                         orderBy={orderBy}
@@ -229,8 +230,8 @@ export default function TransactionListTable(props) {
                 <TableBody>
                   {filteredOrders
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <TransactionRow key={row.id} data={row} token={token} redirect={(event, path) => redirect(event, path)}/>
+                    .map((row, index) => (
+                      <TransactionRow key={index} data={row} token={token} redirect={(event, path) => redirect(event, path)}/>
                     ))}
                     {emptyRows > 0 && filteredOrders.length !== 0 && (
                     <TableRow style={{ height: 60 * emptyRows }}>

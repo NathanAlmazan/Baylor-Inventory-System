@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { getSession } from 'next-auth/client';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import API_CLIENT_SIDE from '../../../layouts/APIConfig';
@@ -26,6 +28,7 @@ export default function EmployeeProfile(props) {
     const [imageURL, setImageURL] = useState(employeeData.profile_image);
     const [errorDialog, setErrorDialog] = useState(null);
     const [salesReport, setSalesReport] = useState(employeeData.sales_report);
+    const matches = useMediaQuery('(min-width:600px)');
 
     const ExecutivePosition = ["President", "Vice President", "Manager"];
     const Personnel = ["Warehouse Staff", "Delivery Personnel"];
@@ -223,7 +226,7 @@ export default function EmployeeProfile(props) {
                 <Typography variant="h4" gutterBottom>
                     Employee Profile
                 </Typography>
-               
+            {matches ? (
                 <Stack direction="row" spacing={2}>
                     <Button
                         color="secondary"
@@ -255,6 +258,37 @@ export default function EmployeeProfile(props) {
                     )
                     )}
                 </Stack>
+            ) : (
+                <Stack direction="row">
+                    <IconButton
+                        color="secondary"
+                        size="large"
+                        onClick={() => history.push("/employees/edit/" + employeeData.id)}
+                    >
+                        <EditIcon fontSize="medium" />
+                    </IconButton>
+                {ExecutivePosition.includes(currUser.position) && (
+                    !employeeData.is_active ? (
+                        <IconButton
+                            color="error"
+                            size="large"
+                            onClick={() => handleUnarchiveEmployee()}
+                        >
+                            <UnarchiveIcon fontSize="medium" />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            color="error"
+                            size="large"
+                            onClick={() => handleArchiveEmployee()}
+                        >
+                            <ArchiveIcon fontSize="medium" />
+                        </IconButton>
+                    )
+                    )}
+                </Stack>
+            )}
+                
             </Stack>
         
             <Stack direction="column" spacing={3}>

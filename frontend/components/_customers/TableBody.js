@@ -21,7 +21,7 @@ function stringAvatar(name) {
   }
 
 function CustomerBody(props) {
-    const { customers, position } = props;
+    const { customers, position, redirect } = props;
     return (
         <TableBody>
             {customers.map((row) => {
@@ -30,6 +30,7 @@ function CustomerBody(props) {
                 return (
                 <TableRow
                     hover
+                    onClick={() => redirect(`/customers/profile/${id}`)}
                     key={id}
                     tabIndex={-1}
                     role="checkbox"

@@ -146,6 +146,7 @@ export default function Suppliers({ allSuppliers, currUser }) {
               userNotFound={isUserNotFound} 
               searchQuery={filterName}
               position={currUser.position}
+              redirect={value => history.push(value)}
           />
 
         </Card>
